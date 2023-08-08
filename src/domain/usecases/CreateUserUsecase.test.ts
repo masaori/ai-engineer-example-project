@@ -1,28 +1,15 @@
-import { CreateUserUsecase, UserRepository } from './CreateUserUsecase';
-import { User } from '../enitites/User';
+import { CreateUserUsecase } from './CreateUserUsecase';
 
 describe('CreateUserUsecase', () => {
-  let userRepository: UserRepository;
-  let createUserUsecase: CreateUserUsecase;
+    let createUserUsecase: CreateUserUsecase;
 
-  beforeEach(() => {
-    userRepository = {
-      issueId: jest.fn().mockResolvedValue('1'),
-      create: jest.fn().mockResolvedValue(undefined)
-    };
-    createUserUsecase = new CreateUserUsecase(userRepository);
-  });
+    beforeEach(() => {
+        createUserUsecase = new CreateUserUsecase();
+    });
 
-  it('should create a user with an issued id', async () => {
-    const user: Omit<User, 'id'> = {
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      isDemo: false
-    };
-
-    await createUserUsecase.execute(user);
-
-    expect(userRepository.issueId).toHaveBeenCalled();
-    expect(userRepository.create).toHaveBeenCalledWith({ ...user, id: '1' });
-  });
+    test('successfully creates a user', () => {
+        const user = createUserUsecase.execute({ username: 'testuser', password: 'testpass' });
+        expect(user).toHaveProperty('username', 'testuser');
+        expect(user).toHaveProperty('password', 'testpass');
+    });
 });
